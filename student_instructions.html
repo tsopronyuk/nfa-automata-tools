@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Instructions for Finite Automata Test</title>
+    <style>
+        body {
+            font-family: Times New Roman, serif;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 1in 0.5in;
+            background-color: white;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+        .container {
+            background-color: white;
+            padding: 0;
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #4CAF50;
+            padding-bottom: 10px;
+            font-size: 18pt;
+        }
+        h2 {
+            color: #4CAF50;
+            margin-top: 25px;
+            font-size: 16pt;
+        }
+        h3 {
+            color: #2196F3;
+            margin-top: 20px;
+            font-size: 14pt;
+        }
+        .algorithm {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .example {
+            background-color: #d4edda;
+            padding: 12px;
+            border-left: 4px solid #28a745;
+            border-radius: 8px;
+            font-family: Courier New, monospace;
+            margin: 10px 0;
+        }
+        .warning {
+            background-color: #fff3cd;
+            padding: 12px;
+            border-left: 4px solid #ffc107;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .mistake {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        hr {
+            border: 1px solid #ddd;
+            margin: 20px 0;
+        }
+        code {
+            background-color: #f4f4f4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: Courier New, monospace;
+            font-size: 11pt;
+        }
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 25px;
+        }
+        li {
+            margin: 5px 0;
+        }
+        @media print {
+            body {
+                margin: 0;
+                padding: 0.5in;
+            }
+            .algorithm, .example, .warning {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+            h2, h3 {
+                break-after: avoid;
+                page-break-after: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+<h1>📚 ALGORITHMS FOR OPERATIONS ON FINITE AUTOMATA</h1>
+
+<p><strong>📌 HOW TO FORMAT YOUR ANSWERS IN THE TEST:</strong></p>
+<ul>
+    <li><strong>Q, F</strong> - write elements separated by commas, <strong>WITHOUT curly braces</strong> and <strong>WITHOUT spaces</strong><br>
+    &nbsp;&nbsp;✅ <code>q1,q2,q3</code>&nbsp;&nbsp;&nbsp;❌ <code>{q1,q2,q3}</code>&nbsp;&nbsp;&nbsp;❌ <code>q1, q2, q3</code></li>
+    <li><strong>Σ</strong> - write symbols separated by commas, <strong>WITHOUT spaces</strong><br>
+    &nbsp;&nbsp;✅ <code>a,b,c</code>&nbsp;&nbsp;&nbsp;❌ <code>{a,b,c}</code>&nbsp;&nbsp;&nbsp;❌ <code>a, b, c</code></li>
+    <li><strong>q0</strong> - write only the state name (e.g., <code>q0</code> or <code>q1</code>)</li>
+    <li><strong>New transitions</strong> - use the format: <code>δ(state,symbol)=set_of_states</code> (without curly braces)<br>
+    &nbsp;&nbsp;✅ <code>δ(q3,a)=q2,q4</code>&nbsp;&nbsp;&nbsp;❌ <code>δ(q3,a)={q2,q4}</code></li>
+    <li>All sets must be <strong>sorted alphabetically</strong><br>
+    &nbsp;&nbsp;✅ <code>q1,q2,q3</code>&nbsp;&nbsp;&nbsp;❌ <code>q3,q1,q2</code></li>
+    <li><strong>Only REACHABLE states are included in set Q</strong> (unreachable states are removed)</li>
+    <li><strong>The new initial state <code>q0</code> appears ONLY</strong> in the "Union" and "Kleene star (M*)" operations</li>
+    <li><strong>Do NOT write empty sets</strong> (just skip them)</li>
+</ul>
+
+<hr>
+
+<h2>1. CONCATENATION (A · B)</h2>
+
+<div class="algorithm">
+<p><strong>Step-by-step procedure:</strong></p>
+<ol>
+    <li>Take all states from the first automaton A</li>
+    <li>Take all states from the second automaton B, <strong>except</strong> its initial state (it becomes unreachable)</li>
+    <li><strong>Initial state</strong> of the resulting automaton = initial state of A</li>
+    <li><strong>Final states</strong> of the resulting automaton:
+        <ul>
+            <li>If <strong>the initial state of B was final</strong>, then final states are <strong>all final states of A</strong> + <strong>all final states of B</strong> (except its initial)</li>
+            <li>If <strong>the initial state of B was NOT final</strong>, then final states are <strong>only the final states of B</strong> (except its initial)</li>
+        </ul>
+    </li>
+    <li><strong>New transitions:</strong> From each final state of A, add the same transitions that were from the initial state of B</li>
+</ol>
+</div>
+
+<div class="example">
+<p><strong>✅ EXAMPLE OF A CORRECT ANSWER:</strong></p>
+<p>
+Q = q1,q2,q3,p2,p3<br>
+Σ = a,b,c<br>
+q0 = q1<br>
+F = p3<br>
+New transitions: δ(q3,a)=p2
+</p>
+</div>
+
+<hr>
+
+<h2>2. UNION (C ∪ D)</h2>
+
+<div class="algorithm">
+<p><strong>Step-by-step procedure:</strong></p>
+<ol>
+    <li>Create a <strong>new initial state</strong> named <code>q0</code></li>
+    <li>Take all states from C, <strong>except</strong> its initial state</li>
+    <li>Take all states from D, <strong>except</strong> its initial state</li>
+    <li><strong>Initial state</strong> of the resulting automaton = <code>q0</code></li>
+    <li><strong>Final states</strong> = final states of C (except its initial) + final states of D (except its initial) + <code>q0</code> (if the initial state of C or D was final)</li>
+    <li><strong>New transitions:</strong> From <code>q0</code>, add all transitions from the initial state of C and all transitions from the initial state of D (combine them)</li>
+</ol>
+</div>
+
+<div class="example">
+<p><strong>✅ EXAMPLE OF A CORRECT ANSWER:</strong></p>
+<p>
+Q = q0,r2,r3,s2,s3,s4<br>
+Σ = a,b,c<br>
+q0 = q0<br>
+F = q0,r2,r3,s3<br>
+New transitions: δ(q0,a)=r2, δ(q0,b)=s2
+</p>
+</div>
+
+<hr>
+
+<h2>3. KLEENE STAR (M*)</h2>
+
+<div class="algorithm">
+<p><strong>Step-by-step procedure:</strong></p>
+<ol>
+    <li>Create a <strong>new initial state</strong> named <code>q0</code></li>
+    <li>Take all states from M, <strong>except</strong> its initial state</li>
+    <li><strong>Initial state</strong> of the resulting automaton = <code>q0</code></li>
+    <li><strong>Final states</strong> = final states of M (except its initial) + <code>q0</code></li>
+    <li><strong>New transitions:</strong>
+        <ul>
+            <li>From <code>q0</code>, add transitions that were from the initial state of M</li>
+            <li>From each final state of M, add transitions that were from the initial state of M</li>
+        </ul>
+    </li>
+</ol>
+</div>
+
+<div class="example">
+<p><strong>✅ EXAMPLE OF A CORRECT ANSWER:</strong></p>
+<p>
+Q = q0,t2,t3,t4<br>
+Σ = a,b,c<br>
+q0 = q0<br>
+F = q0,t3<br>
+New transitions: δ(q0,a)=t2, δ(t3,a)=t2,t4
+</p>
+</div>
+
+<hr>
+
+<h2>4. POSITIVE ITERATION (M+)</h2>
+
+<div class="algorithm">
+<p><strong>Step-by-step procedure:</strong></p>
+<ol>
+    <li>Take <strong>all states</strong> from M (none are removed)</li>
+    <li><strong>Initial state</strong> of the resulting automaton = initial state of M</li>
+    <li><strong>Final states</strong> = final states of M</li>
+    <li><strong>New transitions:</strong> From each final state of M, add transitions that were from the initial state of M</li>
+</ol>
+</div>
+
+<div class="example">
+<p><strong>✅ EXAMPLE OF A CORRECT ANSWER:</strong></p>
+<p>
+Q = t1,t2,t3,t4<br>
+Σ = a,b,c<br>
+q0 = t1<br>
+F = t3<br>
+New transitions: δ(t3,a)=t2,t4
+</p>
+</div>
+
+<hr>
+
+<h2>⚠️ COMMON MISTAKES</h2>
+
+<table>
+    <tr>
+        <th>Incorrect</th>
+        <th>Correct</th>
+        <th>Reason</th>
+    </tr>
+    <tr class="mistake">
+        <td>{q1,q2,q3}</td>
+        <td class="correct">q1,q2,q3</td>
+        <td>No curly braces</td>
+    </tr>
+    <tr class="mistake">
+        <td>q1, q2, q3</td>
+        <td class="correct">q1,q2,q3</td>
+        <td>No spaces</td>
+    </tr>
+    <tr class="mistake">
+        <td>q3,q1,q2</td>
+        <td class="correct">q1,q2,q3</td>
+        <td>Sorted alphabetically</td>
+    </tr>
+    <tr class="mistake">
+        <td>δ(q3 a)=q2,q4</td>
+        <td class="correct">δ(q3,a)=q2,q4</td>
+        <td>Comma after state is required</td>
+    </tr>
+    <tr class="mistake">
+        <td>δ(q3,a)={q2,q4}</td>
+        <td class="correct">δ(q3,a)=q2,q4</td>
+        <td>No curly braces around the set</td>
+    </tr>
+</table>
+
+<div class="warning">
+<p><strong>💡 TIP:</strong> Before submitting your test, make sure all sets are sorted, there are no spaces, and no curly braces are used!</p>
+</div>
+
+</div>
+</body>
+</html>
